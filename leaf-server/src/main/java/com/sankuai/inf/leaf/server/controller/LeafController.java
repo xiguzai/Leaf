@@ -11,7 +11,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class LeafController {
@@ -30,6 +34,23 @@ public class LeafController {
     @RequestMapping(value = "/api/snowflake/get/{key}")
     public String getSnowflakeId(@PathVariable("key") String key) {
         return get(key, snowflakeService.getId(key));
+    }
+
+    @RequestMapping(value = "/api/segment/list/{key}")
+    public List<String> listSegmentID(@PathVariable("key") String key, @RequestParam("length") Integer length) {
+        List<String> list;
+        if (length > 0) {
+            list = new ArrayList<>(length);
+            int i = 0;
+            while (i < length) {
+                list.add(get(key, segmentService.getId(key)));
+                i++;
+            }
+            return list;
+        }
+        list = new ArrayList<>(1);
+        list.add(get(key, segmentService.getId(key)));
+        return list;
     }
 
     private String get(@PathVariable("key") String key, Result id) {
