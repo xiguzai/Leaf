@@ -36,8 +36,8 @@ public class LeafController {
         return get(key, snowflakeService.getId(key));
     }
 
-    @RequestMapping(value = "/api/segment/list/{key}")
-    public List<String> listSegmentID(@PathVariable("key") String key, @RequestParam("length") Integer length) {
+    @RequestMapping(value = "/api/segment/list/{key}/{length}")
+    public List<String> listSegmentID(@PathVariable("key") String key, @PathVariable("length") int length) {
         List<String> list;
         if (length > 0) {
             list = new ArrayList<>(length);
