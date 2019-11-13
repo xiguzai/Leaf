@@ -1,5 +1,9 @@
 package com.sankuai.inf.leaf.client;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -7,12 +11,21 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class HttpClientLeafClient implements LeafClient {
+
+    private Logger logger = LoggerFactory.getLogger(HttpClientLeafClient.class);
+
+    private Gson gson = new GsonBuilder()
+            .disableHtmlEscaping()
+            .serializeNulls()
+            .create();
 
     private String host;
 
@@ -41,9 +54,24 @@ public class HttpClientLeafClient implements LeafClient {
     }
 
     private String getId(String uri) {
+        return request(uri);
+    }
+
+    private List<String> listId(String uri) {
+        String resp = request(uri);
+        try {
+            List<String> list = gson.fromJson(resp, new TypeToken<List<String>>() {
+            }.getType());
+            return list;
+        } catch (JsonSyntaxException e) {
+            logger.error(e.getMessage(), e);
+            throw new LeafClientException();
+        }
+    }
+
+    private String request(String uri) {
         CloseableHttpClient client = HttpClients.createDefault();
         CloseableHttpResponse execute = null;
-        // String uri = host + String.format(LeafClient.GET_SEGMENT_ID_URI, key);
         HttpGet httpGet = new HttpGet(uri);
         try {
             execute = client.execute(httpGet);
@@ -54,15 +82,11 @@ public class HttpClientLeafClient implements LeafClient {
             HttpEntity entity = execute.getEntity();
             return EntityUtils.toString(entity, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
+            throw new LeafClientException();
         } finally {
             clean(client, execute);
         }
-        return null;
-    }
-
-    private List<String> listId(String uri) {
-        return null;
     }
 
     private void clean(CloseableHttpClient client, CloseableHttpResponse response) {
@@ -74,7 +98,7 @@ public class HttpClientLeafClient implements LeafClient {
                 client.close();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
