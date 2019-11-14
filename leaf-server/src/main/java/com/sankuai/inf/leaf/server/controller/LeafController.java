@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -51,6 +52,20 @@ public class LeafController {
         list = new ArrayList<>(1);
         list.add(get(key, segmentService.getId(key)));
         return list;
+    }
+
+    @RequestMapping(value = "/api/snowflake/list/{key}/{length}")
+    public List<String> listSnowflakeId(@PathVariable("key") String key, @PathVariable("length") int length) {
+        if (length > 0) {
+            List<String> list = new ArrayList<>(length);
+            int i = 0;
+            while (i < length) {
+                list.add(get(key, snowflakeService.getId(key)));
+                i++;
+            }
+            return list;
+        }
+        return Collections.singletonList(get(key, snowflakeService.getId(key)));
     }
 
     private String get(@PathVariable("key") String key, Result id) {

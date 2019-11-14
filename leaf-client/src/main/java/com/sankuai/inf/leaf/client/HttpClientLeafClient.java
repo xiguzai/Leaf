@@ -27,29 +27,29 @@ public class HttpClientLeafClient implements LeafClient {
             .serializeNulls()
             .create();
 
-    private String host;
+    private String server;
 
     @Override
     public String getSegmentId(String key) {
-        String uri = host + String.format(LeafClient.GET_SEGMENT_ID_URI, key);
+        String uri = server + String.format(LeafClient.GET_SEGMENT_ID_URI, key);
         return getId(uri);
     }
 
     @Override
     public String getSnowflakeId(String key) {
-        String uri = host + String.format(LeafClient.GET_SNOWFLAKE_ID_URI, key);
+        String uri = server + String.format(LeafClient.GET_SNOWFLAKE_ID_URI, key);
         return getId(uri);
     }
 
     @Override
     public List<String> listSegmentId(String key, int length) {
-        String uri = String.format(LeafClient.LIST_SEGMENT_ID_URI, key, length);
+        String uri = server + String.format(LeafClient.LIST_SEGMENT_ID_URI, key, length);
         return listId(uri);
     }
 
     @Override
     public List<String> listSnowflakeId(String key, int length) {
-        String uri = String.format(LeafClient.LIST_SNOWFLAKE_ID_URI, key, length);
+        String uri = server + String.format(LeafClient.LIST_SNOWFLAKE_ID_URI, key, length);
         return listId(uri);
     }
 
@@ -102,7 +102,7 @@ public class HttpClientLeafClient implements LeafClient {
         }
     }
 
-    public void setHost(String host) {
-        this.host = host;
+    public void setServer(String server) {
+        this.server = server;
     }
 }

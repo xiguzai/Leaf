@@ -22,29 +22,29 @@ public class OkHttpLeafClient implements LeafClient {
             .serializeNulls()
             .create();
 
-    private String host;
+    private String server;
 
     @Override
     public String getSegmentId(String key) {
-        String url = String.format(host + LeafClient.GET_SEGMENT_ID_URI, key);
+        String url = String.format(server + LeafClient.GET_SEGMENT_ID_URI, key);
         return request(url);
     }
 
     @Override
     public String getSnowflakeId(String key) {
-        String url = String.format(host + LeafClient.GET_SNOWFLAKE_ID_URI, key);
+        String url = String.format(server + LeafClient.GET_SNOWFLAKE_ID_URI, key);
         return request(url);
     }
 
     @Override
     public List<String> listSegmentId(String key, int length) {
-        String url = String.format(host + LeafClient.LIST_SEGMENT_ID_URI, key, length);
+        String url = String.format(server + LeafClient.LIST_SEGMENT_ID_URI, key, length);
         return listId(url);
     }
 
     @Override
     public List<String> listSnowflakeId(String key, int length) {
-        String url = String.format(host + LeafClient.LIST_SNOWFLAKE_ID_URI, key, length);
+        String url = String.format(server + LeafClient.LIST_SNOWFLAKE_ID_URI, key, length);
         return listId(url);
     }
 
@@ -75,7 +75,7 @@ public class OkHttpLeafClient implements LeafClient {
         }
     }
 
-    public void setHost(String host) {
-        this.host = host;
+    public void setServer(String server) {
+        this.server = server;
     }
 }
