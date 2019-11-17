@@ -19,13 +19,12 @@ public class DruidConfig {
     @Value("${leaf.jdbc.password}")
     private String password;
 
-    @Bean
+    @Bean(initMethod = "init")
     public DataSource dataSource() {
         DruidDataSource dataSource = new DruidDataSource();
         dataSource.setUrl(url);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
-        dataSource.setAsyncInit(true);
         return dataSource;
     }
 }
