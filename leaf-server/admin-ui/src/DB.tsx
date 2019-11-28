@@ -9,14 +9,12 @@ import {
   Divider,
   Modal,
   Spin,
-  message,
-  Tabs
+  message
 } from 'antd';
 import './App.css';
 import { FormComponentProps } from 'antd/lib/form';
 
 const { confirm } = Modal;
-const { TabPane } = Tabs;
 
 interface ActionProps extends FormComponentProps {
   text: any;
